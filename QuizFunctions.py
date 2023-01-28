@@ -1,4 +1,4 @@
-# Functions pertaining to running users quizzes.
+# Functions pertaining to running users quizzes
 import DatabaseFunctions
 import customtkinter
 from tkinter import messagebox
