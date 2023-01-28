@@ -24,13 +24,25 @@ button_frame.place(x= 315, y= 10)
 
 # Menu bar that will be used to manage test-banks
 menu_bar = Menu(root, background='blue', foreground='black', activebackground='black', activeforeground='blue')
-testbank_menu = Menu(menu_bar, tearoff=0, background='blue', foreground='black', activebackground='black', activeforeground='blue')
-testbank_menu.add_command(label="Open Test Bank", command=DatabaseFunctions.select_current_database)
-testbank_menu.add_command(label="New Test Bank", command=DatabaseFunctions.create_database)
-testbank_menu.add_command(label="Delete Test Bank", command=DatabaseFunctions.delete_table)
-testbank_menu.add_command(label="Add to test bank", command=DatabaseFunctions.new_quizbank_entry)
-testbank_menu.add_command(label="Remove from test bank", command=DatabaseFunctions.delete_quizbank_entry)
-menu_bar.add_cascade(label="Test Bank",menu=testbank_menu)
+#Question Bank Menu Dropdown
+question_bank_menu = Menu(menu_bar, tearoff=0, background='blue', foreground='black', activebackground='black', activeforeground='blue')
+question_bank_menu.add_command(label="Open Question Bank", command=DatabaseFunctions.select_current_database)
+question_bank_menu.add_command(label="New Question Bank", command=DatabaseFunctions.create_database)
+question_bank_menu.add_command(label="Delete Current Question Bank",command=DatabaseFunctions.delete_database)
+#Question Category Menu Dropdown
+question_category_menu = Menu(menu_bar, tearoff=0, background='blue', foreground='black', activebackground='black', activeforeground='blue')
+question_category_menu.add_command(label="Add Category to Question Bank", command=DatabaseFunctions.new_quizbank_entry)
+question_category_menu.add_command(label="Remove Category from Question Bank", command=DatabaseFunctions.delete_quizbank_entry)
+question_category_menu.add_command(label="View Categories in Current Question Bank")
+#Add or Remove Question Menu Dropdown
+question_menu = Menu(menu_bar, tearoff=0, background='blue', foreground='black', activebackground='black', activeforeground='blue')
+question_menu.add_command(label="Add Question")
+question_menu.add_command(label="Remove Question")
+question_menu.add_command(label="View Questions in Current Category")
+#Menu Bar Cascade Settings
+menu_bar.add_cascade(label="Test Bank",menu=question_bank_menu)
+menu_bar.add_cascade(label="Categories",menu=question_category_menu)
+menu_bar.add_cascade(label="Questions",menu=question_menu)
 
 # New Quiz button
 question_button = customtkinter.CTkButton(master=button_frame, text="Ask a Random Question!", command=lambda: QuizFunctions.generate_question(button_frame))

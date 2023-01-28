@@ -2,32 +2,57 @@
 
 import sqlite3
 from sqlite3 import Error
+import os
 from tkinter import filedialog
 from tkinter import messagebox
 from tkinter import simpledialog
 import random
 
+# Establish global variables for current test bank (db) and category (table), and set it to an empty string.
 global current_db
+global current_table
+current_db = ""
+current_table = ""
 
-# Method for selecting current database
+
+# Databases will act as "Question Banks" for user
+
+# Select current database
 def select_current_database():
     global current_db
-    current_db = filedialog.askopenfilename(title="Select a Question Bank", filetypes=(".db"))
+    current_db = filedialog.askopenfilename(title="Select a Question Bank", filetypes=(("Database Files", "*.db"),))
     print(current_db)
 
-# Create database if one is not available.
+# Create database 
 def create_database():
     try:
         conn = None
         user_bank_name = simpledialog.askstring(title="Name Question Bank", prompt="Please enter a topic for your new question bank.")
-        conn = sqlite3.connect(user_bank_name.replace(" ", "")+'.db')
+        conn = sqlite3.connect(user_bank_name.replace(" ", "")+"Question_Bank"+'.db')
     except Error as e:
         messagebox.showerror(title="An Error Occurred", message=str(e))
     finally:
         if conn:
             conn.close
 
+# Delete database
+def delete_database():
+    try:
+        if current_db != str:
+            select_current_database()
+        user_warning = messagebox.askquestion(title="Delete Question Bank?",message="You are about to delete " + current_db + "do you wish to continue?",icon='warning')
+        if user_warning == 'yes':
+            os.remove(current_db)
+    except Exception as e:
+            messagebox.showerror(title="An Error Occured", message=str(e))
+
 # Tables will function as "topics", or "question categories" for the user. 
+
+# Select current table
+def select_current_table():
+    pass
+
+
 def create_table():
     try:
         select_current_database()
@@ -43,7 +68,7 @@ def create_table():
 # Delete current Question Bank table
 def delete_table():  
     try:
-        conn = sqlite3.connect('QuestionBank.db')
+        conn = sqlite3.connect(current_db)
         cursor = conn.cursor()
         cursor.execute('DROP TABLE QUESTION_BANK')
         conn.close()
@@ -58,7 +83,7 @@ def new_quizbank_entry():
         user_answer = simpledialog.askstring(title='Add Answer', prompt='Please enter the correct answer to store in your quiz bank.')
 
         user_entry = [user_question, user_answer]
-        conn = sqlite3.connect('QuestionBank.db')
+        conn = sqlite3.connect(current_db)
         cursor = conn.cursor()
         cursor.execute("INSERT INTO QUESTION_BANK (Question, Answer) VALUES (?,?);", user_entry)
         conn.commit()
