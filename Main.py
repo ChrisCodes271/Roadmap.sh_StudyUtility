@@ -31,9 +31,9 @@ question_bank_menu.add_command(label="New Question Bank", command=DatabaseFuncti
 question_bank_menu.add_command(label="Delete Current Question Bank",command=DatabaseFunctions.delete_database)
 #Question Category Menu Dropdown
 question_category_menu = Menu(menu_bar, tearoff=0, background='blue', foreground='black', activebackground='black', activeforeground='blue')
-question_category_menu.add_command(label="Add Category to Question Bank", command=DatabaseFunctions.new_quizbank_entry)
+question_category_menu.add_command(label="Add Category to Question Bank", command=DatabaseFunctions.create_table)
 question_category_menu.add_command(label="Remove Category from Question Bank", command=DatabaseFunctions.delete_quizbank_entry)
-question_category_menu.add_command(label="View Categories in Current Question Bank")
+question_category_menu.add_command(label="View Categories in Current Question Bank", command=DatabaseFunctions.display_all_tables)
 #Add or Remove Question Menu Dropdown
 question_menu = Menu(menu_bar, tearoff=0, background='blue', foreground='black', activebackground='black', activeforeground='blue')
 question_menu.add_command(label="Add Question")

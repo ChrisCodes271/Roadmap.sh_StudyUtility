@@ -20,7 +20,7 @@ current_table = ""
 # Select current database
 def select_current_database():
     global current_db
-    current_db = filedialog.askopenfilename(title="Select a Question Bank", filetypes=(("Database Files", "*.db"),))
+    current_db = os.path.basename(filedialog.askopenfilename(title="Select a Question Bank", filetypes=(("Database Files", "*.db"),)))
     print(current_db)
 
 # Create database 
@@ -48,6 +48,19 @@ def delete_database():
 
 # Tables will function as "topics", or "question categories" for the user. 
 
+# Display all tables
+def display_all_tables():
+    try:
+        if current_db != str:
+            select_current_database()
+        conn = sqlite3.connect(current_db)
+        cursor = conn.cursor()
+        all_tables = cursor.execute("SELECT * FROM sqlite_master WHERE type='table';").fetchall()
+        print(type(all_tables))
+        print(all_tables)
+    except Exception as e:
+        print(e)
+
 # Select current table
 def select_current_table():
     pass
@@ -55,11 +68,12 @@ def select_current_table():
 
 def create_table():
     try:
-        select_current_database()
+        if current_db != str:
+            select_current_database()
         conn = sqlite3.connect(current_db)
         cursor = conn.cursor()
         user_table_name = simpledialog.askstring(title="Create Question Category", prompt="Please enter a category name")
-        cursor.execute('CREATE TABLE (?) (''EntryID INTEGER PRIMARY KEY,''Question varchar(255),''Answer varchar(255)'');', user_table_name)
+        cursor.execute("CREATE TABLE " + user_table_name + "(EntryID INTEGER PRIMARY KEY, Question varchar(255), Answer varchar(255));")
     except Error as e:
         messagebox.showerror(title="An Error Occured", message=str(e))
     finally:
