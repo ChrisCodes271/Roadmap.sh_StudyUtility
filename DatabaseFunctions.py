@@ -3,6 +3,7 @@
 import sqlite3
 from sqlite3 import Error
 import os
+from tkinter import Label
 from tkinter import filedialog
 from tkinter import messagebox
 from tkinter import simpledialog
@@ -49,15 +50,18 @@ def delete_database():
 # Tables will function as "topics", or "question categories" for the user. 
 
 # Display all tables
-def display_all_tables():
+def display_all_tables(frame):
     try:
         if current_db != str:
             select_current_database()
         conn = sqlite3.connect(current_db)
         cursor = conn.cursor()
-        all_tables = cursor.execute("SELECT * FROM sqlite_master WHERE type='table';").fetchall()
-        print(type(all_tables))
-        print(all_tables)
+        database_data= cursor.execute("SELECT * FROM sqlite_master WHERE type='table';").fetchall()
+        user_category_prompt = Label(frame, text='Here is a list of categories in the ' + current_db + ' Question Bank')
+        user_category_prompt.pack()
+        for item in database_data:
+            table_display = Label(frame, text=item[1])
+            table_display.pack()
     except Exception as e:
         print(e)
 
