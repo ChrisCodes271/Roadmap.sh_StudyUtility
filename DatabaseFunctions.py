@@ -39,7 +39,7 @@ def create_database():
 # Delete database
 def delete_database():
     try:
-        if current_db != str:
+        if current_db == "":
             select_current_database()
         user_warning = messagebox.askquestion(title="Delete Question Bank?",message="You are about to delete " + current_db + "do you wish to continue?",icon='warning')
         if user_warning == 'yes':
@@ -52,7 +52,7 @@ def delete_database():
 # Display all tables
 def display_all_tables(frame):
     try:
-        if current_db != str:
+        if current_db == "":
             select_current_database()
         conn = sqlite3.connect(current_db)
         cursor = conn.cursor()
@@ -72,7 +72,7 @@ def select_current_table():
 
 def create_table():
     try:
-        if current_db != str:
+        if current_db == "":
             select_current_database()
         conn = sqlite3.connect(current_db)
         cursor = conn.cursor()
