@@ -3,7 +3,9 @@
 import sqlite3
 from sqlite3 import Error
 import os
-from tkinter import Label
+from tkinter import StringVar
+from customtkinter import CTkLabel
+from customtkinter import CTkCheckBox
 from tkinter import filedialog
 from tkinter import messagebox
 from tkinter import simpledialog
@@ -11,6 +13,7 @@ import random
 
 # Establish global variables for current test bank (db) and category (table), and set it to an empty string.
 global current_db
+global current_db_readable
 global current_table
 current_db = ""
 current_table = ""
@@ -21,15 +24,17 @@ current_table = ""
 # Select current database
 def select_current_database():
     global current_db
+    global current_db_readable
     current_db = os.path.basename(filedialog.askopenfilename(title="Select a Question Bank", filetypes=(("Database Files", "*.db"),)))
-    print(current_db)
+
+    
 
 # Create database 
 def create_database():
     try:
         conn = None
         user_bank_name = simpledialog.askstring(title="Name Question Bank", prompt="Please enter a topic for your new question bank.")
-        conn = sqlite3.connect(user_bank_name.replace(" ", "")+"Question_Bank"+'.db')
+        conn = sqlite3.connect(user_bank_name.replace(" ", "")+"_Question_Bank"+'.db')
     except Error as e:
         messagebox.showerror(title="An Error Occurred", message=str(e))
     finally:
@@ -49,6 +54,12 @@ def delete_database():
 
 # Tables will function as "topics", or "question categories" for the user. 
 
+check_var = StringVar("on")
+
+def checkbox_event():
+    print(check_var.get())
+    print(type(check_var))
+
 # Display all tables
 def display_all_tables(frame):
     try:
@@ -57,10 +68,10 @@ def display_all_tables(frame):
         conn = sqlite3.connect(current_db)
         cursor = conn.cursor()
         database_data= cursor.execute("SELECT * FROM sqlite_master WHERE type='table';").fetchall()
-        user_category_prompt = Label(frame, text='Here is a list of categories in the ' + current_db + ' Question Bank')
+        user_category_prompt = CTkLabel(frame, text=' Here is a list of categories in the ' + current_db + " ") 
         user_category_prompt.pack()
         for item in database_data:
-            table_display = Label(frame, text=item[1])
+            table_display = CTkCheckBox(frame, text=item[1], command=checkbox_event, variable=check_var, onvalue="on", offvalue="off")
             table_display.pack()
     except Exception as e:
         print(e)
@@ -88,7 +99,7 @@ def delete_table():
     try:
         conn = sqlite3.connect(current_db)
         cursor = conn.cursor()
-        cursor.execute('DROP TABLE QUESTION_BANK')
+        cursor.execute('DROP TABLE ' + current_table)
         conn.close()
     
     except Exception as e:
